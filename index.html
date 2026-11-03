@@ -254,14 +254,14 @@ ol.refs li{margin-bottom:8px}
   <p class="prose">There is also a thermodynamic reason why an infinite aligned cluster survives only at T<sub>c</sub> = 0. Compare a single domain of aligned spins with the same chain containing a “droplet” of flipped spins, bounded by two domain walls that each cost 2J:</p>
   <div class="chain" id="chainA" aria-label="Single domain"></div>
   <div class="chain" id="chainB" aria-label="Two domain walls"></div>
-  <div class="eq">F<sub>1-dom</sub> = −NJ − k<sub>B</sub>T ln 2,  F<sub>2-dom</sub> = −NJ + 4J − k<sub>B</sub>T ln[2N(N − 1)]</div>
-  <p class="prose">The two walls can sit at N(N − 1) pairs of positions, which is entropy. So F<sub>2-dom</sub> − F<sub>1-dom</sub> ≈ 4J − 2k<sub>B</sub>T ln N, and the single domain is unstable whenever 2J/k<sub>B</sub>T &lt; ln N, which for N → ∞ is every T &gt; 0. Setting the difference to zero estimates the largest domain, N ≈ e<sup>2J/k<sub>B</sub>T</sup>, consistent with ξ ≈ ½e<sup>2βJ</sup>. There is no phase transition at any finite temperature in one dimension.</p>
+  <div class="eq">F<sub>1-dom</sub> = −NJ − k<sub>B</sub>T ln 2,  F<sub>2-dom</sub> = −NJ + 4J − k<sub>B</sub>T ln[N(N − 1)]</div>
+  <p class="prose">On a ring of N bonds the two walls can sit on N(N − 1)/2 pairs of bonds, and each choice comes with its overall spin flip, so there are N(N − 1) such states (for N = 4, twelve); this is entropy. So F<sub>2-dom</sub> − F<sub>1-dom</sub> = 4J − k<sub>B</sub>T ln[N(N − 1)/2] ≈ 4J − 2k<sub>B</sub>T ln N for large N, and the single domain is unstable whenever 2J/k<sub>B</sub>T &lt; ln N, which for N → ∞ is every T &gt; 0. Setting the large-N form to zero estimates the largest domain, N ≈ e<sup>2J/k<sub>B</sub>T</sup> (the exact expression crosses zero at N(N − 1)/2 = e<sup>4J/k<sub>B</sub>T</sup>, N ≈ <span class="rad"><span class="rs">√</span><span class="rc">2</span></span> e<sup>2J/k<sub>B</sub>T</sup>; only the exponential scale matters), consistent with ξ ≈ ½e<sup>2βJ</sup>. There is no phase transition at any finite temperature in one dimension.</p>
   <div class="two2">
     <div>
       <div class="sl"><label for="wT">Temperature T</label><output id="wTo"></output><input type="range" id="wT" min="0.2" max="3" step="0.01" value="0.5"></div>
       <dl class="readouts" id="wRead"></dl>
     </div>
-    <figure style="margin:0"><figcaption><b>F<sub>2-dom</sub> − F<sub>1-dom</sub> against N</b>Log scale in N. It turns negative beyond N* ≈ e<sup>2J/T</sup> (dashed): longer chains always break up.</figcaption><canvas id="wC"></canvas></figure>
+    <figure style="margin:0"><figcaption><b>F<sub>2-dom</sub> − F<sub>1-dom</sub> against N</b>Log scale in N. 4J − k<sub>B</sub>T ln[N(N − 1)/2]. It turns negative near the large-N estimate N* ≈ e<sup>2J/T</sup> (dashed); the exact zero is at N(N − 1)/2 = e<sup>4J/T</sup>. Longer chains always break up.</figcaption><canvas id="wC"></canvas></figure>
   </div>
   <p class="prose" style="margin-top:18px">This links back to symmetry breaking: for a finite chain, ⟨M⟩ = 0 when H → 0 is taken first, and in one dimension even N → ∞ first does not help at T &gt; 0, because domain walls destroy order on scales beyond ξ. The live chain at the top shows exactly this.</p>
 </section>
@@ -406,7 +406,9 @@ function plot(cv,o){
 
 /* ---------- exact results ---------- */
 const sech=x=>1/Math.cosh(x);
-function lam(T,H,J){ const b=1/T, r=Math.sqrt(Math.sinh(b*H)**2+Math.exp(-4*b*J)); return [Math.exp(b*J)*(Math.cosh(b*H)+r), Math.exp(b*J)*(Math.cosh(b*H)-r)]; }
+/* λ− from det T / λ+ = 2 sinh(2βJ)/λ+ = e^{βJ}(1 − e^{−4βJ})/(cosh βH + r): the difference cosh βH − r cancels all its
+   digits in strong fields (T = 0.1, H = 2, J = 2 gave λ− = 0 instead of ≈ 1). J = 0 still gives exactly 0. */
+function lam(T,H,J){ const b=1/T, c=Math.cosh(b*H), r=Math.sqrt(Math.sinh(b*H)**2+Math.exp(-4*b*J)), e=Math.exp(b*J); return [e*(c+r), e*(-Math.expm1(-4*b*J))/(c+r)]; }
 function fEx(T,H,J){ if (T<=0) return -J-Math.abs(H); const b=1/T; return -J-T*Math.log(Math.cosh(b*H)+Math.sqrt(Math.sinh(b*H)**2+Math.exp(-4*b*J))); }
 function mEx(T,H,J){ if (T<=0) return Math.sign(H); const b=1/T, s=Math.sinh(b*H); return s/Math.sqrt(s*s+Math.exp(-4*b*J)); }
 function chiEx(T,H,J){ const b=1/T, e=Math.exp(-4*b*J), s=Math.sinh(b*H); return b*Math.cosh(b*H)*e/Math.pow(s*s+e,1.5); }
@@ -416,9 +418,12 @@ function gEx(r,T,H,J){ const [lp,lm]=lam(T,H,J), m=mEx(T,H,J); return (1-m*m)*Ma
 /* ---------- live chain ---------- */
 const LV={N:400,T:1,H:0,spf:1,running:true};
 let S=null; const ROWS=300;
-function reset(kind){ const N=LV.N; S={s:new Int8Array(N),hist:new Uint8Array(N*ROWS),row:0,filled:0,ts:[],sm:0,n:0,corr:new Float64Array(61),cn:0,dom:new Float64Array(201),dn:0};
-  for (let i=0;i<N;i++) S.s[i]= kind==='up'?1:(Math.random()<0.5?1:-1); }
-function stats(){ S.ts=[]; S.sm=0; S.se=0; S.n=0; S.corr.fill(0); S.cn=0; S.dom.fill(0); S.dn=0; }
+function reset(kind){ const N=LV.N; S={s:new Int8Array(N),hist:new Uint8Array(N*ROWS),row:0,filled:0,ts:[],sm:0,se:0,n:0,corr:new Float64Array(61),cn:0,dom:new Float64Array(201),dn:0};
+  for (let i=0;i<N;i++) S.s[i]= kind==='up'?1:(Math.random()<0.5?1:-1); S.q=inst(); }
+/* instantaneous m, ε (at the current H) and wall count of the chain now; kept current while paused so that no
+   reading from before a reset or a change of T, H survives. Time averages show '–' until a new frame is measured. */
+function inst(){ const N=LV.N, s=S.s; let M=0, B=0, w=0; for (let i=0;i<N;i++){ M+=s[i]; const p=s[i]*s[(i+1)%N]; B+=p; if (p<0) w++; } return {m:M/N,e:(-B-LV.H*M)/N,w}; }
+function stats(){ S.ts=[]; S.sm=0; S.se=0; S.n=0; S.corr.fill(0); S.cn=0; S.dom.fill(0); S.dn=0; S.q=inst(); }
 function sweep(){ const N=LV.N, s=S.s, b=1/LV.T, H=LV.H;
   for (let k=0;k<N;k++){ const i=(Math.random()*N)|0, sp=s[i], nb=s[(i+1)%N]+s[(i+N-1)%N], dE=2*sp*(nb+H); if (dE<=0||Math.random()<Math.exp(-b*dE)) s[i]=-sp; } }
 /* The live chain runs only while the user wants it running (LV.running), its figures are on screen and the tab is
@@ -461,8 +466,8 @@ function drawChain(){
 function drawLive(){
   const T=LV.T, H=LV.H, t=Math.tanh(1/T), N=LV.N;
   $('tOut').textContent=T.toFixed(2); $('hOut').textContent=H.toFixed(2);
-  if (S.q){ $('rM').textContent=S.q.m.toFixed(4); $('rMa').textContent=`${(S.sm/S.n).toFixed(4)} / ${mEx(T,H,1).toFixed(4)}`;
-    $('rE').textContent=`${(S.se/S.n).toFixed(4)} / ${epsEx(T,H).toFixed(4)}`; $('rW').textContent=S.q.w;
+  if (S.q){ $('rM').textContent=S.q.m.toFixed(4); $('rMa').textContent=`${S.n?(S.sm/S.n).toFixed(4):'–'} / ${mEx(T,H,1).toFixed(4)}`;
+    $('rE').textContent=`${S.n?(S.se/S.n).toFixed(4):'–'} / ${epsEx(T,H).toFixed(4)}`; $('rW').textContent=S.q.w;
     $('rD').textContent= H===0 ? `${S.dn?(N*S.n/S.dn).toFixed(2):'–'} / ${(2/(1-t)).toFixed(2)}` : 'shown at H = 0'; }
   $('rX').textContent= H===0 ? xiEx(T,1).toFixed(3) : (1/Math.log(lam(T,H,1)[0]/lam(T,H,1)[1])).toFixed(3);
   const R=Math.min(60,N/2), ma=S.n?S.sm/S.n:0, pts=[];
@@ -495,7 +500,7 @@ function drawMat(){
   const tpp=Math.exp(b*J+b*H), tmm=Math.exp(b*J-b*H), tpm=Math.exp(-b*J), [lp,lm]=lam(T,H,J);
   const fmt=v=>v>=1e4||v<1e-3?v.toExponential(3):v.toFixed(4);
   $('matT').innerHTML=`<span class="h">T</span><span class="h">s′ = +1</span><span class="h">s′ = −1</span><span class="h">s = +1</span><span>${fmt(tpp)}</span><span>${fmt(tpm)}</span><span class="h">s = −1</span><span>${fmt(tpm)}</span><span>${fmt(tmm)}</span>`;
-  $('matL').innerHTML=`<span class="h">λ<sub>+</sub></span><span>${fmt(lp)}</span><span class="h">λ<sub>−</sub></span><span>${fmt(lm)}</span><span class="h">λ<sub>−</sub>/λ<sub>+</sub></span><span>${(lm/lp).toFixed(5)}</span><span class="h">f = −T ln λ<sub>+</sub></span><span>${(-T*Math.log(lp)).toFixed(5)}</span>`;
+  $('matL').innerHTML=`<span class="h">λ<sub>+</sub></span><span>${fmt(lp)}</span><span class="h">λ<sub>−</sub></span><span>${fmt(lm)}</span><span class="h">λ<sub>−</sub>/λ<sub>+</sub></span><span>${(()=>{ const q=lm/lp; return q!==0&&Math.abs(q)<1e-3 ? q.toExponential(3) : q.toFixed(5); })()}</span><span class="h">f = −T ln λ<sub>+</sub></span><span>${(-T*Math.log(lp)).toFixed(5)}</span>`;
   $('matNote').innerHTML = J===0 ? 'With J = 0: λ<sub>+</sub> = 2 cosh βH and λ<sub>−</sub> = 0, so Z = (2 cosh βH)<sup>N</sup>, the non-interacting result.' : (H===0 ? `At H = 0: λ<sub>±</sub> = e<sup>βJ</sup> ± e<sup>−βJ</sup>, that is 2 cosh βJ = ${fmt(2*Math.cosh(b*J))} and 2 sinh βJ = ${fmt(2*Math.sinh(b*J))}, so Z = (2 cosh βJ)<sup>N</sup>(1 + tanh<sup>N</sup> βJ).` : '');
   const Ns=Array.from({length:60},(_,i)=>i+2);
   const fN=Ns.map(N=>[N,-T*(N*Math.log(lp)+Math.log1p(Math.pow(lm/lp,N)))/N]);
@@ -536,10 +541,10 @@ function drawCorr(){
 function drawWalls(){
   const T=+$('wT').value; $('wTo').textContent=T.toFixed(2);
   const Ns=Array.from({length:200},(_,i)=>Math.pow(10,0.3+i*7/199));
-  const d=Ns.map(N=>[N,4-T*Math.log(N*(N-1))]);
+  const d=Ns.map(N=>[N,4-T*Math.log(N*(N-1)/2)]);   // N(N − 1) two-wall states against the 2 aligned ones
   const Nst=Math.exp(2/T);
   plot($('wC'),{logx:true,x:[2,1e7],series:[{color:C.accent,width:2,pts:d},{color:C.muted,width:1,pts:[[2,0],[1e7,0]]}],vlines:Nst<1e7?[{x:Nst,color:C.crit,dash:[4,4],label:'N*'}]:[],xlabel:'chain length N',ylabel:'ΔF / J'});
-  $('wRead').innerHTML=`<dt>2J/k<sub>B</sub>T</dt><dd>${(2/T).toFixed(3)}</dd><dt>Largest stable domain N* = e<sup>2J/k<sub>B</sub>T</sup></dt><dd>${Nst<1e9?Nst.toFixed(1):Nst.toExponential(2)}</dd><dt>Correlation length ξ</dt><dd>${xiEx(T,1).toFixed(2)}</dd><dt>Low-T estimate ½e<sup>2βJ</sup></dt><dd>${(0.5*Nst).toFixed(2)}</dd>`;
+  $('wRead').innerHTML=`<dt>2J/k<sub>B</sub>T</dt><dd>${(2/T).toFixed(3)}</dd><dt>Largest stable domain N* = e<sup>2J/k<sub>B</sub>T</sup> (large-N estimate)</dt><dd>${Nst<1e9?Nst.toFixed(1):Nst.toExponential(2)}</dd><dt>Exact zero of ΔF, N(N − 1)/2 = e<sup>4J/k<sub>B</sub>T</sup></dt><dd>${(()=>{ const Nx=(1+Math.sqrt(1+8*Math.exp(4/T)))/2; return Nx<1e9?Nx.toFixed(1):Nx.toExponential(2); })()}</dd><dt>Correlation length ξ</dt><dd>${xiEx(T,1).toFixed(2)}</dd><dt>Low-T estimate ½e<sup>2βJ</sup></dt><dd>${(0.5*Nst).toFixed(2)}</dd>`;
 }
 function drawChains(){
   const n=22, a=[], b=[];
@@ -548,10 +553,10 @@ function drawChains(){
 }
 
 /* ---------- wiring ---------- */
-function setT(v){ LV.T=+v; $('tSl').value=LV.T; document.querySelectorAll('[data-t]').forEach(b=>b.classList.toggle('primary',Math.abs(+b.dataset.t-LV.T)<1e-9)); if (S) stats(); }
+function setT(v){ LV.T=+v; $('tSl').value=LV.T; document.querySelectorAll('[data-t]').forEach(b=>b.classList.toggle('primary',Math.abs(+b.dataset.t-LV.T)<1e-9)); if (S){ stats(); redraw(); } }
 $('tSl').addEventListener('input',e=>setT(e.target.value));
 document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>setT(b.dataset.t));
-$('hSl').addEventListener('input',e=>{ LV.H=+e.target.value; stats(); });
+$('hSl').addEventListener('input',e=>{ LV.H=+e.target.value; stats(); redraw(); });
 $('nSel').onchange=e=>{ LV.N=+e.target.value; reset('random'); redraw(); };
 $('spf').onchange=e=>{ LV.spf=+e.target.value; };
 $('runB').onclick=()=>setRun(!LV.running);
@@ -559,7 +564,7 @@ const io=new IntersectionObserver(es=>{ es.forEach(e=>onScreen.set(e.target,e.is
 ['st','gC','dC','mC'].forEach(id=>io.observe($(id)));
 document.addEventListener('visibilitychange',kick);
 RM.addEventListener('change',e=>{ if (e.matches) setRun(false); });
-const redraw=()=>{ if (!LV.running){ drawChain(); drawLive(); } };   // keep a paused chain in sync with resets
+function redraw(){ if (!LV.running && C.panel){ drawChain(); drawLive(); } }   // keep a paused chain in sync with resets and T, H
 $('rnd').onclick=()=>{ reset('random'); redraw(); }; $('allUp').onclick=()=>{ reset('up'); redraw(); };
 ['mT','mH','mJ'].forEach(id=>$(id).addEventListener('input',drawMat));
 $('wT').addEventListener('input',drawWalls);
