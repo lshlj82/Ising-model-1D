@@ -2,6 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!-- lang-toggle:head -->
+<script>(function(){var l='en';try{if(localStorage.getItem('lshlj82-demo-lang')==='ko')l='ko'}catch(e){}window.LANG=l;document.documentElement.dataset.lang=l;window.tr=function(en,ko){return window.LANG==='ko'&&ko!=null?ko:en};})();</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+#langBtn{position:fixed;z-index:21;top:calc(env(safe-area-inset-top,0px) + 12px);right:calc(env(safe-area-inset-right,0px) + 60px);
+  min-width:40px;height:40px;padding:0 10px;border-radius:20px;display:grid;place-items:center;cursor:pointer;font:600 14px/1 system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  background:var(--lb-bg,rgba(255,255,255,.92));color:var(--lb-fg,#1d2633);border:1px solid var(--lb-bd,rgba(20,30,45,.18));box-shadow:0 1px 4px rgba(0,0,0,.12)}
+#langBtn:hover{border-color:currentColor}
+#langBtn:focus-visible{outline:2px solid #3b82f6;outline-offset:2px}
+:root[data-theme="dark"] #langBtn{--lb-bg:rgba(22,28,38,.92);--lb-fg:#e8eef6;--lb-bd:rgba(255,255,255,.18)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #langBtn{--lb-bg:rgba(22,28,38,.92);--lb-fg:#e8eef6;--lb-bd:rgba(255,255,255,.18)}}
+:root[data-lang="ko"] body{word-break:keep-all}
+:root[data-lang="ko"]{--sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;--serif:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;--ui-font:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+:root[data-lang="ko"] body{font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+
+@media print{#langBtn{display:none}}
+</style>
+<!-- lang-toggle:head-end -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>The one-dimensional Ising model</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -139,15 +157,16 @@ ol.refs li{margin-bottom:8px}
 .rad .rc{display:inline-block; border-top:0.075em solid currentColor; padding:0.04em 0.12em 0 0.1em; line-height:1.1}
 .ss{display:inline-flex; flex-direction:column; vertical-align:0.5em; line-height:1; font-size:0.72em; margin-left:0.04em; margin-right:0.04em}
 .ss sup,.ss sub{font-size:1em; vertical-align:baseline; line-height:1.02; position:static}
+#langBtn{right:calc(env(safe-area-inset-right,0px) + 12px)}
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <header>
-  <h1>The one-dimensional Ising model</h1>
-  <p class="lede">Following Ising himself, put the spins on a chain. The model can be solved exactly with a 2 × 2 transfer matrix, and the answer is that there is no phase transition at any finite temperature: the critical point sits at T<sub>c</sub> = 0, H<sub>c</sub> = 0, where the free energy has a cusp and the susceptibility and correlation length diverge. Watch the chain fluctuate, then follow the exact solution step by step.</p>
-  <p class="note" style="margin-top:6px">Based on lecture notes by Sang Hoon Lee for Chapter 2, following K. Christensen and N. R. Moloney, <i>Complexity and Criticality</i> (2005). Units: k<sub>B</sub> = 1, and J = 1 unless stated. <a href="#references" style="color:var(--accent)">References</a></p>
+  <h1 data-k="k1">The one-dimensional Ising model</h1>
+  <p class="lede" data-k="k2">Following Ising himself, put the spins on a chain. The model can be solved exactly with a 2 × 2 transfer matrix, and the answer is that there is no phase transition at any finite temperature: the critical point sits at T<sub>c</sub> = 0, H<sub>c</sub> = 0, where the free energy has a cusp and the susceptibility and correlation length diverge. Watch the chain fluctuate, then follow the exact solution step by step.</p>
+  <p class="note" style="margin-top:6px" data-k="k3">Based on lecture notes by Sang Hoon Lee for Chapter 2, following K. Christensen and N. R. Moloney, <i>Complexity and Criticality</i> (2005). Units: k<sub>B</sub> = 1, and J = 1 unless stated. <a href="#references" style="color:var(--accent)">References</a></p>
 </header>
 
 <div class="hero">
@@ -156,42 +175,42 @@ ol.refs li{margin-bottom:8px}
       <canvas id="strip" aria-label="Current state of the chain"></canvas>
       <canvas id="st" aria-label="Space-time history of the chain"></canvas>
     </div>
-    <p class="plate-note" id="stNote">Top: the chain now (white up, black down). Below: its history, one row per frame with time running downward, so domains appear as vertical stripes and domain walls as their edges. Periodic boundaries, s<sub>N+1</sub> = s<sub>1</sub>.</p>
+    <p class="plate-note" id="stNote" data-k="k4">Top: the chain now (white up, black down). Below: its history, one row per frame with time running downward, so domains appear as vertical stripes and domain walls as their edges. Periodic boundaries, s<sub>N+1</sub> = s<sub>1</sub>.</p>
   </div>
   <div class="controls">
     <div class="pbig"><span>T</span> = <output id="tOut"></output></div>
     <div class="slider-wrap"><input type="range" id="tSl" min="0.1" max="4" step="0.01" aria-label="Temperature"></div>
     <div class="btns" aria-label="Temperature presets"><button data-t="0.3">0.3</button><button data-t="0.5">0.5</button><button data-t="0.8">0.8</button><button data-t="1.5">1.5</button><button data-t="3">3</button></div>
-    <div class="sl" style="margin:4px 0 0"><label for="hSl">External field H</label><output id="hOut"></output><input type="range" id="hSl" min="-1" max="1" step="0.01" value="0"></div>
+    <div class="sl" style="margin:4px 0 0"><label for="hSl" data-k="k5">External field H</label><output id="hOut"></output><input type="range" id="hSl" min="-1" max="1" step="0.01" value="0"></div>
     <div class="row" style="gap:16px">
-      <div class="field"><label class="lab" for="nSel">Chain length N</label><select id="nSel"><option value="100">100</option><option value="200">200</option><option value="400" selected>400</option><option value="1000">1 000</option></select></div>
-      <div class="field"><label class="lab" for="spf">Speed</label><select id="spf"><option value="1" selected>1 sweep per frame</option><option value="4">4 sweeps per frame</option><option value="16">16 sweeps per frame</option></select></div>
+      <div class="field"><label class="lab" for="nSel" data-k="k6">Chain length N</label><select id="nSel"><option value="100">100</option><option value="200">200</option><option value="400" selected>400</option><option value="1000">1 000</option></select></div>
+      <div class="field"><label class="lab" for="spf" data-k="k7">Speed</label><select id="spf"><option value="1" selected><span data-k="k8">1 sweep per frame</span></option><option value="4"><span data-k="k9">4 sweeps per frame</span></option><option value="16"><span data-k="k10">16 sweeps per frame</span></option></select></div>
     </div>
-    <div class="row"><button id="runB" class="primary">Pause</button><button id="rnd">Random start</button><button id="allUp">All up</button></div>
+    <div class="row"><button id="runB" class="primary">Pause</button><button id="rnd" data-k="k11">Random start</button><button id="allUp" data-k="k12">All up</button></div>
     <dl class="readouts">
-      <dt>Magnetization per spin m (now)</dt><dd id="rM">–</dd>
-      <dt>Time average of m / exact m(T, H)</dt><dd id="rMa">–</dd>
-      <dt>Time average of ε / exact ε(T, H)</dt><dd id="rE">–</dd>
-      <dt>Domain walls (now)</dt><dd id="rW">–</dd>
-      <dt>Mean domain length / exact 2/(1 − tanh βJ)</dt><dd id="rD">–</dd>
-      <dt>Correlation length ξ = 1/ln(λ<sub>+</sub>/λ<sub>−</sub>)</dt><dd id="rX">–</dd>
+      <dt data-k="k13">Magnetization per spin m (now)</dt><dd id="rM">–</dd>
+      <dt data-k="k14">Time average of m / exact m(T, H)</dt><dd id="rMa">–</dd>
+      <dt data-k="k15">Time average of ε / exact ε(T, H)</dt><dd id="rE">–</dd>
+      <dt data-k="k16">Domain walls (now)</dt><dd id="rW">–</dd>
+      <dt data-k="k17">Mean domain length / exact 2/(1 − tanh βJ)</dt><dd id="rD">–</dd>
+      <dt data-k="k18">Correlation length ξ = 1/ln(λ<sub>+</sub>/λ<sub>−</sub>)</dt><dd id="rX">–</dd>
     </dl>
   </div>
 </div>
 <div class="figs">
-  <figure><figcaption><b>Spin–spin correlation g(r) of the chain</b>Dots: ⟨s<sub>i</sub>s<sub>i+r</sub>⟩ − ⟨m⟩², averaged over the run. Line: the exact sin²2φ (λ<sub>−</sub>/λ<sub>+</sub>)<sup>r</sup>, which is tanh<sup>r</sup>(βJ) = e<sup>−r/ξ</sup> at H = 0.</figcaption><canvas id="gC"></canvas></figure>
-  <figure><figcaption><b>Domain lengths at H = 0</b>Dots: domains seen in the chain. Line: the exact geometric distribution, since each bond is parallel with probability (1 + tanh βJ)/2, independently.</figcaption><canvas id="dC"></canvas></figure>
-  <figure><figcaption><b>Magnetization over time</b>No lasting magnetization at any T &gt; 0: the chain breaks into domains, which wander and merge.</figcaption><canvas id="mC"></canvas></figure>
+  <figure><figcaption data-k="k19"><b>Spin–spin correlation g(r) of the chain</b>Dots: ⟨s<sub>i</sub>s<sub>i+r</sub>⟩ − ⟨m⟩², averaged over the run. Line: the exact sin²2φ (λ<sub>−</sub>/λ<sub>+</sub>)<sup>r</sup>, which is tanh<sup>r</sup>(βJ) = e<sup>−r/ξ</sup> at H = 0.</figcaption><canvas id="gC"></canvas></figure>
+  <figure><figcaption data-k="k20"><b>Domain lengths at H = 0</b>Dots: domains seen in the chain. Line: the exact geometric distribution, since each bond is parallel with probability (1 + tanh βJ)/2, independently.</figcaption><canvas id="dC"></canvas></figure>
+  <figure><figcaption data-k="k21"><b>Magnetization over time</b>No lasting magnetization at any T &gt; 0: the chain breaks into domains, which wander and merge.</figcaption><canvas id="mC"></canvas></figure>
 </div>
 
 <section>
-  <h2>The transfer matrix</h2>
-  <p class="prose">With periodic boundaries, E = −J Σ<sub>i</sub> s<sub>i</sub>s<sub>i+1</sub> − H Σ<sub>i</sub> s<sub>i</sub>, and the field term can be split evenly between neighbors, H s<sub>i</sub> → (H/2)(s<sub>i</sub> + s<sub>i+1</sub>). The Boltzmann weight then factorizes into one factor per bond, T<sub>s<sub>i</sub>s<sub>i+1</sub></sub> = exp[βJ s<sub>i</sub>s<sub>i+1</sub> + (βH/2)(s<sub>i</sub> + s<sub>i+1</sub>)], the entries of a real symmetric 2 × 2 matrix. Summing over each spin is a matrix product, so</p>
-  <div class="eq">Z = Σ<sub>s<sub>1</sub></sub> (T<sup>N</sup>)<sub>s<sub>1</sub>s<sub>1</sub></sub> = Tr T<sup>N</sup> = λ<span class="ss"><sup>N</sup><sub>+</sub></span> + λ<span class="ss"><sup>N</sup><sub>−</sub></span>,  λ<sub>±</sub> = e<sup>βJ</sup> [cosh βH ± <span class="rad"><span class="rs">√</span><span class="rc">sinh² βH + e<sup>−4βJ</sup></span></span>]</div>
+  <h2 data-k="k22">The transfer matrix</h2>
+  <p class="prose" data-k="k23">With periodic boundaries, E = −J Σ<sub>i</sub> s<sub>i</sub>s<sub>i+1</sub> − H Σ<sub>i</sub> s<sub>i</sub>, and the field term can be split evenly between neighbors, H s<sub>i</sub> → (H/2)(s<sub>i</sub> + s<sub>i+1</sub>). The Boltzmann weight then factorizes into one factor per bond, T<sub>s<sub>i</sub>s<sub>i+1</sub></sub> = exp[βJ s<sub>i</sub>s<sub>i+1</sub> + (βH/2)(s<sub>i</sub> + s<sub>i+1</sub>)], the entries of a real symmetric 2 × 2 matrix. Summing over each spin is a matrix product, so</p>
+  <div class="eq" data-k="k24">Z = Σ<sub>s<sub>1</sub></sub> (T<sup>N</sup>)<sub>s<sub>1</sub>s<sub>1</sub></sub> = Tr T<sup>N</sup> = λ<span class="ss"><sup>N</sup><sub>+</sub></span> + λ<span class="ss"><sup>N</sup><sub>−</sub></span>,  λ<sub>±</sub> = e<sup>βJ</sup> [cosh βH ± <span class="rad"><span class="rs">√</span><span class="rc">sinh² βH + e<sup>−4βJ</sup></span></span>]</div>
   <div class="row" style="gap:24px; margin-top:6px">
-    <div class="sl" style="flex:1 1 220px"><label for="mT">Temperature T</label><output id="mTo"></output><input type="range" id="mT" min="0.1" max="5" step="0.01" value="1"></div>
-    <div class="sl" style="flex:1 1 220px"><label for="mH">Field H</label><output id="mHo"></output><input type="range" id="mH" min="-2" max="2" step="0.01" value="0"></div>
-    <div class="sl" style="flex:1 1 220px"><label for="mJ">Coupling J</label><output id="mJo"></output><input type="range" id="mJ" min="0" max="2" step="0.01" value="1"></div>
+    <div class="sl" style="flex:1 1 220px"><label for="mT" data-k="k25">Temperature T</label><output id="mTo"></output><input type="range" id="mT" min="0.1" max="5" step="0.01" value="1"></div>
+    <div class="sl" style="flex:1 1 220px"><label for="mH" data-k="k26">Field H</label><output id="mHo"></output><input type="range" id="mH" min="-2" max="2" step="0.01" value="0"></div>
+    <div class="sl" style="flex:1 1 220px"><label for="mJ" data-k="k27">Coupling J</label><output id="mJo"></output><input type="range" id="mJ" min="0" max="2" step="0.01" value="1"></div>
   </div>
   <div class="row" style="align-items:flex-start">
     <div class="mat" id="matT"></div>
@@ -199,87 +218,87 @@ ol.refs li{margin-bottom:8px}
   </div>
   <p class="note" id="matNote"></p>
   <div class="figs">
-    <figure><figcaption><b>Free energy per spin of a finite ring</b>f<sub>N</sub> = −T ln(λ<span class="ss"><sup>N</sup><sub>+</sub></span> + λ<span class="ss"><sup>N</sup><sub>−</sub></span>)/N against N. It approaches f = −T ln λ<sub>+</sub> (dashed) as (λ<sub>−</sub>/λ<sub>+</sub>)<sup>N</sup> → 0.</figcaption><canvas id="fN"></canvas></figure>
+    <figure><figcaption data-k="k28"><b>Free energy per spin of a finite ring</b>f<sub>N</sub> = −T ln(λ<span class="ss"><sup>N</sup><sub>+</sub></span> + λ<span class="ss"><sup>N</sup><sub>−</sub></span>)/N against N. It approaches f = −T ln λ<sub>+</sub> (dashed) as (λ<sub>−</sub>/λ<sub>+</sub>)<sup>N</sup> → 0.</figcaption><canvas id="fN"></canvas></figure>
   </div>
   <div class="tbl"><table id="zTable" aria-label="Partition function by brute force and by the transfer matrix"></table></div>
 </section>
 
 <section>
-  <h2>Free energy, magnetization and response</h2>
-  <p class="prose">In the thermodynamic limit only the larger eigenvalue survives, giving</p>
-  <div class="eq">f(T, H) = −J − T ln[cosh βH + <span class="rad"><span class="rs">√</span><span class="rc">sinh² βH + e<sup>−4βJ</sup></span></span>],  m(T, H) = sinh βH / <span class="rad"><span class="rs">√</span><span class="rc">sinh² βH + e<sup>−4βJ</sup></span></span></div>
-  <p class="prose">At H = 0, f = −T ln(2 cosh βJ), which tends to −T ln 2 (pure entropy of random spins) as T → ∞ and to −J (pure energy of aligned spins) as T → 0. For any T &gt; 0, m → 0 as H → 0, so m<sub>0</sub>(T) = 0; only at T = 0 is m<sub>0</sub> = ±1. The free energy develops a cusp at (T, H) = (0, 0), a singular point: the critical point. Setting J = 0 recovers the non-interacting results, m = tanh βH and χ = β sech² βH.</p>
+  <h2 data-k="k29">Free energy, magnetization and response</h2>
+  <p class="prose" data-k="k30">In the thermodynamic limit only the larger eigenvalue survives, giving</p>
+  <div class="eq" data-k="k31">f(T, H) = −J − T ln[cosh βH + <span class="rad"><span class="rs">√</span><span class="rc">sinh² βH + e<sup>−4βJ</sup></span></span>],  m(T, H) = sinh βH / <span class="rad"><span class="rs">√</span><span class="rc">sinh² βH + e<sup>−4βJ</sup></span></span></div>
+  <p class="prose" data-k="k32">At H = 0, f = −T ln(2 cosh βJ), which tends to −T ln 2 (pure entropy of random spins) as T → ∞ and to −J (pure energy of aligned spins) as T → 0. For any T &gt; 0, m → 0 as H → 0, so m<sub>0</sub>(T) = 0; only at T = 0 is m<sub>0</sub> = ±1. The free energy develops a cusp at (T, H) = (0, 0), a singular point: the critical point. Setting J = 0 recovers the non-interacting results, m = tanh βH and χ = β sech² βH.</p>
   <div class="figs">
-    <figure><figcaption><b>f(T, H) against H</b>For T = 0 (blue), 1, 2 and 3, at the chosen J. At T = 0 it is −J − |H|, with a cusp at H = 0.</figcaption><canvas id="t1"></canvas></figure>
-    <figure><figcaption><b>m(T, H) against H</b>For T = 0 (blue, a jump from −1 to +1), 0.5, 1 and 2. Dashed: non-interacting spins at T = 1.</figcaption><canvas id="t2"></canvas></figure>
-    <figure><figcaption><b>χ(T, H) against H</b>χ = β cosh βH e<sup>−4βJ</sup> / (sinh² βH + e<sup>−4βJ</sup>)<sup>3/2</sup> for T = 0.5, 1 and 2.</figcaption><canvas id="t3"></canvas></figure>
-    <figure><figcaption><b>Zero-field susceptibility χ(T, 0)</b>Log scale. χ(T, 0) = β e<sup>2βJ</sup> (blue) diverges exponentially as T → 0; for non-interacting spins it is only 1/T (dashed).</figcaption><canvas id="t4"></canvas></figure>
-    <figure><figcaption><b>Energy and specific heat at H = 0</b>ε = −J tanh βJ (blue) and c = (J/T)² sech² βJ (red). Unlike χ, c does not diverge; it peaks near βJ ≈ 1.</figcaption><canvas id="t5"></canvas></figure>
-    <figure><figcaption><b>Fluctuations at H = 0</b>(⟨M²⟩ − ⟨M⟩²)/N = k<sub>B</sub>Tχ = e<sup>2βJ</sup> grows as T falls (blue), while for non-interacting spins it stays at 1 (dashed). The energy variance T²c (red) stays bounded.</figcaption><canvas id="t6"></canvas></figure>
+    <figure><figcaption data-k="k33"><b>f(T, H) against H</b>For T = 0 (blue), 1, 2 and 3, at the chosen J. At T = 0 it is −J − |H|, with a cusp at H = 0.</figcaption><canvas id="t1"></canvas></figure>
+    <figure><figcaption data-k="k34"><b>m(T, H) against H</b>For T = 0 (blue, a jump from −1 to +1), 0.5, 1 and 2. Dashed: non-interacting spins at T = 1.</figcaption><canvas id="t2"></canvas></figure>
+    <figure><figcaption data-k="k35"><b>χ(T, H) against H</b>χ = β cosh βH e<sup>−4βJ</sup> / (sinh² βH + e<sup>−4βJ</sup>)<sup>3/2</sup> for T = 0.5, 1 and 2.</figcaption><canvas id="t3"></canvas></figure>
+    <figure><figcaption data-k="k36"><b>Zero-field susceptibility χ(T, 0)</b>Log scale. χ(T, 0) = β e<sup>2βJ</sup> (blue) diverges exponentially as T → 0; for non-interacting spins it is only 1/T (dashed).</figcaption><canvas id="t4"></canvas></figure>
+    <figure><figcaption data-k="k37"><b>Energy and specific heat at H = 0</b>ε = −J tanh βJ (blue) and c = (J/T)² sech² βJ (red). Unlike χ, c does not diverge; it peaks near βJ ≈ 1.</figcaption><canvas id="t5"></canvas></figure>
+    <figure><figcaption data-k="k38"><b>Fluctuations at H = 0</b>(⟨M²⟩ − ⟨M⟩²)/N = k<sub>B</sub>Tχ = e<sup>2βJ</sup> grows as T falls (blue), while for non-interacting spins it stays at 1 (dashed). The energy variance T²c (red) stays bounded.</figcaption><canvas id="t6"></canvas></figure>
   </div>
 </section>
 
 <section>
-  <h2>Correlation function and the sum rule</h2>
-  <p class="prose">At H = 0, m<sub>0</sub> = 0 for T &gt; 0, so g(r) = ⟨s<sub>i</sub>s<sub>i+r</sub>⟩. Writing the couplings as J<sub>i</sub> and differentiating Z = 2<sup>N</sup> Π cosh βJ<sub>i</sub> once with respect to each bond between the two spins gives</p>
-  <div class="eq">g(r) = tanh<sup>r</sup> βJ = e<sup>−r/ξ</sup>,  ξ = −1/ln tanh βJ = 1/ln(λ<sub>+</sub>/λ<sub>−</sub>)</div>
-  <p class="prose">ξ goes to 0 as T → ∞ and grows as ½e<sup>2βJ</sup> as T → 0<sup>+</sup>; at exactly T = 0 all spins are aligned and g = 0. Summing g over all sites recovers the susceptibility, Σ<sub>j</sub> g = (1 + tanh βJ)/(1 − tanh βJ) = e<sup>2βJ</sup> = k<sub>B</sub>Tχ(T, 0).</p>
+  <h2 data-k="k39">Correlation function and the sum rule</h2>
+  <p class="prose" data-k="k40">At H = 0, m<sub>0</sub> = 0 for T &gt; 0, so g(r) = ⟨s<sub>i</sub>s<sub>i+r</sub>⟩. Writing the couplings as J<sub>i</sub> and differentiating Z = 2<sup>N</sup> Π cosh βJ<sub>i</sub> once with respect to each bond between the two spins gives</p>
+  <div class="eq" data-k="k41">g(r) = tanh<sup>r</sup> βJ = e<sup>−r/ξ</sup>,  ξ = −1/ln tanh βJ = 1/ln(λ<sub>+</sub>/λ<sub>−</sub>)</div>
+  <p class="prose" data-k="k42">ξ goes to 0 as T → ∞ and grows as ½e<sup>2βJ</sup> as T → 0<sup>+</sup>; at exactly T = 0 all spins are aligned and g = 0. Summing g over all sites recovers the susceptibility, Σ<sub>j</sub> g = (1 + tanh βJ)/(1 − tanh βJ) = e<sup>2βJ</sup> = k<sub>B</sub>Tχ(T, 0).</p>
   <div class="figs">
-    <figure><figcaption><b>Correlation length ξ(T, 0)</b>Log scale. Blue: −1/ln tanh(1/T). Dashed: ½e<sup>2/T</sup>, its low-temperature limit.</figcaption><canvas id="c1"></canvas></figure>
-    <figure><figcaption><b>g(r) = tanh<sup>r</sup> βJ</b>Log scale, for T = 0.5, 1 and 2: straight lines with slope −1/ξ.</figcaption><canvas id="c2"></canvas></figure>
+    <figure><figcaption data-k="k43"><b>Correlation length ξ(T, 0)</b>Log scale. Blue: −1/ln tanh(1/T). Dashed: ½e<sup>2/T</sup>, its low-temperature limit.</figcaption><canvas id="c1"></canvas></figure>
+    <figure><figcaption data-k="k44"><b>g(r) = tanh<sup>r</sup> βJ</b>Log scale, for T = 0.5, 1 and 2: straight lines with slope −1/ξ.</figcaption><canvas id="c2"></canvas></figure>
   </div>
   <div class="tbl"><table id="sumTable" aria-label="Sum rule check"></table></div>
 </section>
 
 <section>
-  <h2>The critical point and percolation</h2>
-  <p class="prose">In zero field, T = 0 plays the role of the critical point: χ and ξ diverge as it is approached, together with the onset of spontaneous magnetization. So (T<sub>c</sub>, H<sub>c</sub>) = (0, 0). As in one-dimensional percolation, where p<sub>c</sub> = 1 and p ≤ 1, the critical point can be approached from one side only. The analogy is exact: with p ↔ tanh βJ the correlation functions and the susceptibilities have the same form. The only difference is the reference state. In percolation ξ measures fluctuations away from the empty lattice; in the Ising model, away from randomly oriented spins.</p>
+  <h2 data-k="k45">The critical point and percolation</h2>
+  <p class="prose" data-k="k46">In zero field, T = 0 plays the role of the critical point: χ and ξ diverge as it is approached, together with the onset of spontaneous magnetization. So (T<sub>c</sub>, H<sub>c</sub>) = (0, 0). As in one-dimensional percolation, where p<sub>c</sub> = 1 and p ≤ 1, the critical point can be approached from one side only. The analogy is exact: with p ↔ tanh βJ the correlation functions and the susceptibilities have the same form. The only difference is the reference state. In percolation ξ measures fluctuations away from the empty lattice; in the Ising model, away from randomly oriented spins.</p>
   <div class="tbl"><table aria-label="Percolation and Ising model in one dimension">
-    <thead><tr><th></th><th>1D percolation</th><th>1D Ising model, H = 0</th></tr></thead>
+    <thead><tr><th></th><th data-k="k47">1D percolation</th><th data-k="k48">1D Ising model, H = 0</th></tr></thead>
     <tbody>
-      <tr><td><b>Control parameters</b></td><td>p</td><td>T and H</td></tr>
-      <tr><td><b>Critical point</b></td><td>p<sub>c</sub> = 1, approached from below</td><td>(T<sub>c</sub>, H<sub>c</sub>) = (0, 0), approached from above</td></tr>
-      <tr><td><b>Correlation function</b></td><td>g(r) = p<sup>r</sup></td><td>g(r) = (tanh βJ)<sup>r</sup></td></tr>
-      <tr><td><b>Correlation length</b></td><td>ξ = −1/ln p</td><td>ξ = −1/ln tanh βJ</td></tr>
-      <tr><td><b>Sum rule</b></td><td>χ = (1 + p)/(1 − p)</td><td>k<sub>B</sub>Tχ = (1 + tanh βJ)/(1 − tanh βJ) = e<sup>2βJ</sup></td></tr>
-      <tr><td><b>ξ measures fluctuations away from</b></td><td>the empty configuration</td><td>randomly oriented configurations</td></tr>
+      <tr><td data-k="k49"><b>Control parameters</b></td><td>p</td><td data-k="k50">T and H</td></tr>
+      <tr><td data-k="k51"><b>Critical point</b></td><td data-k="k52">p<sub>c</sub> = 1, approached from below</td><td data-k="k53">(T<sub>c</sub>, H<sub>c</sub>) = (0, 0), approached from above</td></tr>
+      <tr><td data-k="k54"><b>Correlation function</b></td><td>g(r) = p<sup>r</sup></td><td data-k="k55">g(r) = (tanh βJ)<sup>r</sup></td></tr>
+      <tr><td data-k="k56"><b>Correlation length</b></td><td data-k="k57">ξ = −1/ln p</td><td data-k="k58">ξ = −1/ln tanh βJ</td></tr>
+      <tr><td data-k="k59"><b>Sum rule</b></td><td>χ = (1 + p)/(1 − p)</td><td data-k="k60">k<sub>B</sub>Tχ = (1 + tanh βJ)/(1 − tanh βJ) = e<sup>2βJ</sup></td></tr>
+      <tr><td data-k="k61"><b>ξ measures fluctuations away from</b></td><td data-k="k62">the empty configuration</td><td data-k="k63">randomly oriented configurations</td></tr>
     </tbody></table></div>
   <div class="figs">
-    <figure><figcaption><b>One curve for both models</b>(1 + x)/(1 − x) against x, where x is p for percolation and tanh βJ for the Ising model. Dots mark the Ising values at T = 3, 2, 1, 0.7 and 0.5; T → 0 corresponds to p → 1, and the dashed line marks p<sub>c</sub> = 1, or T<sub>c</sub> = 0.</figcaption><canvas id="p1"></canvas></figure>
+    <figure><figcaption data-k="k64"><b>One curve for both models</b>(1 + x)/(1 − x) against x, where x is p for percolation and tanh βJ for the Ising model. Dots mark the Ising values at T = 3, 2, 1, 0.7 and 0.5; T → 0 corresponds to p → 1, and the dashed line marks p<sub>c</sub> = 1, or T<sub>c</sub> = 0.</figcaption><canvas id="p1"></canvas></figure>
   </div>
 </section>
 
 <section>
-  <h2>Why domain walls win</h2>
-  <p class="prose">There is also a thermodynamic reason why an infinite aligned cluster survives only at T<sub>c</sub> = 0. Compare a single domain of aligned spins with the same chain containing a “droplet” of flipped spins, bounded by two domain walls that each cost 2J:</p>
+  <h2 data-k="k65">Why domain walls win</h2>
+  <p class="prose" data-k="k66">There is also a thermodynamic reason why an infinite aligned cluster survives only at T<sub>c</sub> = 0. Compare a single domain of aligned spins with the same chain containing a “droplet” of flipped spins, bounded by two domain walls that each cost 2J:</p>
   <div class="chain" id="chainA" aria-label="Single domain"></div>
   <div class="chain" id="chainB" aria-label="Two domain walls"></div>
-  <div class="eq">F<sub>1-dom</sub> = −NJ − k<sub>B</sub>T ln 2,  F<sub>2-dom</sub> = −NJ + 4J − k<sub>B</sub>T ln[N(N − 1)]</div>
-  <p class="prose">On a ring of N bonds the two walls can sit on N(N − 1)/2 pairs of bonds, and each choice comes with its overall spin flip, so there are N(N − 1) such states (for N = 4, twelve); this is entropy. So F<sub>2-dom</sub> − F<sub>1-dom</sub> = 4J − k<sub>B</sub>T ln[N(N − 1)/2] ≈ 4J − 2k<sub>B</sub>T ln N for large N, and the single domain is unstable whenever 2J/k<sub>B</sub>T &lt; ln N, which for N → ∞ is every T &gt; 0. Setting the large-N form to zero estimates the largest domain, N ≈ e<sup>2J/k<sub>B</sub>T</sup> (the exact expression crosses zero at N(N − 1)/2 = e<sup>4J/k<sub>B</sub>T</sup>, N ≈ <span class="rad"><span class="rs">√</span><span class="rc">2</span></span> e<sup>2J/k<sub>B</sub>T</sup>; only the exponential scale matters), consistent with ξ ≈ ½e<sup>2βJ</sup>. There is no phase transition at any finite temperature in one dimension.</p>
+  <div class="eq" data-k="k67">F<sub>1-dom</sub> = −NJ − k<sub>B</sub>T ln 2,  F<sub>2-dom</sub> = −NJ + 4J − k<sub>B</sub>T ln[N(N − 1)]</div>
+  <p class="prose" data-k="k68">On a ring of N bonds the two walls can sit on N(N − 1)/2 pairs of bonds, and each choice comes with its overall spin flip, so there are N(N − 1) such states (for N = 4, twelve); this is entropy. So F<sub>2-dom</sub> − F<sub>1-dom</sub> = 4J − k<sub>B</sub>T ln[N(N − 1)/2] ≈ 4J − 2k<sub>B</sub>T ln N for large N, and the single domain is unstable whenever 2J/k<sub>B</sub>T &lt; ln N, which for N → ∞ is every T &gt; 0. Setting the large-N form to zero estimates the largest domain, N ≈ e<sup>2J/k<sub>B</sub>T</sup> (the exact expression crosses zero at N(N − 1)/2 = e<sup>4J/k<sub>B</sub>T</sup>, N ≈ <span class="rad"><span class="rs">√</span><span class="rc">2</span></span> e<sup>2J/k<sub>B</sub>T</sup>; only the exponential scale matters), consistent with ξ ≈ ½e<sup>2βJ</sup>. There is no phase transition at any finite temperature in one dimension.</p>
   <div class="two2">
     <div>
-      <div class="sl"><label for="wT">Temperature T</label><output id="wTo"></output><input type="range" id="wT" min="0.2" max="3" step="0.01" value="0.5"></div>
+      <div class="sl"><label for="wT" data-k="k69">Temperature T</label><output id="wTo"></output><input type="range" id="wT" min="0.2" max="3" step="0.01" value="0.5"></div>
       <dl class="readouts" id="wRead"></dl>
     </div>
-    <figure style="margin:0"><figcaption><b>F<sub>2-dom</sub> − F<sub>1-dom</sub> against N</b>Log scale in N. 4J − k<sub>B</sub>T ln[N(N − 1)/2]. It turns negative near the large-N estimate N* ≈ e<sup>2J/T</sup> (dashed); the exact zero is at N(N − 1)/2 = e<sup>4J/T</sup>. Longer chains always break up.</figcaption><canvas id="wC"></canvas></figure>
+    <figure style="margin:0"><figcaption data-k="k70"><b>F<sub>2-dom</sub> − F<sub>1-dom</sub> against N</b>Log scale in N. 4J − k<sub>B</sub>T ln[N(N − 1)/2]. It turns negative near the large-N estimate N* ≈ e<sup>2J/T</sup> (dashed); the exact zero is at N(N − 1)/2 = e<sup>4J/T</sup>. Longer chains always break up.</figcaption><canvas id="wC"></canvas></figure>
   </div>
-  <p class="prose" style="margin-top:18px">This links back to symmetry breaking: for a finite chain, ⟨M⟩ = 0 when H → 0 is taken first, and in one dimension even N → ∞ first does not help at T &gt; 0, because domain walls destroy order on scales beyond ξ. The live chain at the top shows exactly this.</p>
+  <p class="prose" style="margin-top:18px" data-k="k71">This links back to symmetry breaking: for a finite chain, ⟨M⟩ = 0 when H → 0 is taken first, and in one dimension even N → ∞ first does not help at T &gt; 0, because domain walls destroy order on scales beyond ξ. The live chain at the top shows exactly this.</p>
 </section>
 
 <section id="references">
-  <h2>References</h2>
-  <div class="keyref"><p class="prose" style="margin:0"><b>Key reference.</b> K. Christensen and N. R. Moloney, <i>Complexity and Criticality</i>, Imperial College Press, London (2005), Chapter 2.</p></div>
+  <h2 data-k="k72">References</h2>
+  <div class="keyref"><p class="prose" style="margin:0" data-k="k73"><b>Key reference.</b> K. Christensen and N. R. Moloney, <i>Complexity and Criticality</i>, Imperial College Press, London (2005), Chapter 2.</p></div>
   <ol class="refs">
-    <li>E. Ising, “Beitrag zur Theorie des Ferromagnetismus,” <i>Z. Phys.</i> <b>31</b>, 253 (1925).</li>
-    <li>H. A. Kramers and G. H. Wannier, “Statistics of the two-dimensional ferromagnet. Part I,” <i>Phys. Rev.</i> <b>60</b>, 252 (1941). The transfer matrix method.</li>
-    <li>S. G. Brush, “History of the Lenz–Ising model,” <i>Rev. Mod. Phys.</i> <b>39</b>, 883 (1967).</li>
-    <li>N. Goldenfeld, <i>Lectures on Phase Transitions and the Renormalization Group</i>, Addison-Wesley (1992).</li>
+    <li data-k="k74">E. Ising, “Beitrag zur Theorie des Ferromagnetismus,” <i>Z. Phys.</i> <b>31</b>, 253 (1925).</li>
+    <li data-k="k75">H. A. Kramers and G. H. Wannier, “Statistics of the two-dimensional ferromagnet. Part I,” <i>Phys. Rev.</i> <b>60</b>, 252 (1941). The transfer matrix method.</li>
+    <li data-k="k76">S. G. Brush, “History of the Lenz–Ising model,” <i>Rev. Mod. Phys.</i> <b>39</b>, 883 (1967).</li>
+    <li data-k="k77">N. Goldenfeld, <i>Lectures on Phase Transitions and the Renormalization Group</i>, Addison-Wesley (1992).</li>
   </ol>
 </section>
 
 <footer>
-  The live chain uses Metropolis updates on a ring. All other curves are exact.
-  <p style="margin-top:14px">Lecture notes by Sang Hoon Lee. Created by Claude Opus 5.5.</p>
+  <span data-k="k78">The live chain uses Metropolis updates on a ring. All other curves are exact.</span>
+  <p style="margin-top:14px" data-k="k79">Lecture notes by Sang Hoon Lee. Created by Claude Opus 5.5.</p>
 </footer>
 </div>
 
@@ -360,7 +379,7 @@ function plot(cv,o){
   const X0=fx(x0),X1=fx(x1),Y0=fy(y0),Y1=fy(y1);
   const X=v=>m.l+(fx(v)-X0)/(X1-X0)*pw, Y=v=>m.t+ph-(fy(v)-Y0)/(Y1-Y0)*ph;
   cv._inv = px => { const t=(px-m.l)/pw; const v=X0+t*(X1-X0); return o.logx?Math.pow(10,v):v; };
-  ctx.font='11px "Public Sans", system-ui, sans-serif'; ctx.lineWidth=1;
+  ctx.font='11px "Public Sans", "IBM Plex Sans KR", system-ui, sans-serif'; ctx.lineWidth=1;
   function ticks(lo,hi,log,custom){
     if (custom) return custom.filter(v=>v>=lo*0.999&&v<=hi*1.001).map(v=>[v,(o.xfmt||String)(v)]);
     if (log){
@@ -433,7 +452,7 @@ const RM=matchMedia('(prefers-reduced-motion: reduce)'), onScreen=new Map();
 let raf=0;
 const active=()=>LV.running && !document.hidden && (!onScreen.size || [...onScreen.values()].some(Boolean));
 function kick(){ if (!raf && active()) raf=requestAnimationFrame(frame); }
-function setRun(on){ LV.running=on; $('runB').textContent=on?'Pause':'Run'; kick(); }
+function setRun(on){ LV.running=on; $('runB').textContent=on?tr('Pause','일시 정지'):tr('Run','실행'); kick(); }
 function frame(){
   raf=0; if (!active()) return;
   if (S){
@@ -468,17 +487,17 @@ function drawLive(){
   $('tOut').textContent=T.toFixed(2); $('hOut').textContent=H.toFixed(2);
   if (S.q){ $('rM').textContent=S.q.m.toFixed(4); $('rMa').textContent=`${S.n?(S.sm/S.n).toFixed(4):'–'} / ${mEx(T,H,1).toFixed(4)}`;
     $('rE').textContent=`${S.n?(S.se/S.n).toFixed(4):'–'} / ${epsEx(T,H).toFixed(4)}`; $('rW').textContent=S.q.w;
-    $('rD').textContent= H===0 ? `${S.dn?(N*S.n/S.dn).toFixed(2):'–'} / ${(2/(1-t)).toFixed(2)}` : 'shown at H = 0'; }
+    $('rD').textContent= H===0 ? `${S.dn?(N*S.n/S.dn).toFixed(2):'–'} / ${(2/(1-t)).toFixed(2)}` : tr('shown at H = 0','H = 0에서 표시'); }
   $('rX').textContent= H===0 ? xiEx(T,1).toFixed(3) : (1/Math.log(lam(T,H,1)[0]/lam(T,H,1)[1])).toFixed(3);
   const R=Math.min(60,N/2), ma=S.n?S.sm/S.n:0, pts=[];
   if (S.cn) for (let r=1;r<=R;r++){ const v=S.corr[r]/S.cn-ma*ma; if (v>0) pts.push([r,v]); }
   const th=Array.from({length:R},(_,i)=>[i+1,gEx(i+1,T,H,1)]);
-  plot($('gC'),{x:[0,R],logy:true,y:[1e-4,1.2],series:[{color:C.ink,dash:[6,4],width:1.3,pts:th},{dots:true,r:3,color:C.accent,pts}],xlabel:'distance r',ylabel:'g(r)'});
+  plot($('gC'),{x:[0,R],logy:true,y:[1e-4,1.2],series:[{color:C.ink,dash:[6,4],width:1.3,pts:th},{dots:true,r:3,color:C.accent,pts}],xlabel:tr('distance r','거리 r'),ylabel:'g(r)'});
   const q=(1+t)/2, dp=[], dt=[];
   if (S.dn){ let tot=0; for (let l=1;l<=200;l++) tot+=S.dom[l]; for (let l=1;l<200;l++) if (S.dom[l]>0) dp.push([l,S.dom[l]/tot]); }
   for (let l=1;l<200;l++) dt.push([l,(1-q)*Math.pow(q,l-1)]);
-  plot($('dC'),{x:[0,Math.min(200,Math.max(20,6/(1-q)))],logy:true,y:[1e-5,1],series:[{color:C.ink,dash:[6,4],width:1.3,pts:dt},{dots:true,r:3,color:C.accent,pts:dp}],xlabel:'domain length ℓ',ylabel:'P(ℓ)'});
-  plot($('mC'),{x:[0,500],y:[-1.05,1.05],series:[{color:C.accent,width:1.3,pts:S.ts.map((v,i)=>[i,v])},{color:C.crit,dash:[5,4],width:1.1,pts:[[0,mEx(T,H,1)],[500,mEx(T,H,1)]]}],xlabel:'frames (most recent 500)',ylabel:'m'});
+  plot($('dC'),{x:[0,Math.min(200,Math.max(20,6/(1-q)))],logy:true,y:[1e-5,1],series:[{color:C.ink,dash:[6,4],width:1.3,pts:dt},{dots:true,r:3,color:C.accent,pts:dp}],xlabel:tr('domain length ℓ','자구 길이 ℓ'),ylabel:'P(ℓ)'});
+  plot($('mC'),{x:[0,500],y:[-1.05,1.05],series:[{color:C.accent,width:1.3,pts:S.ts.map((v,i)=>[i,v])},{color:C.crit,dash:[5,4],width:1.1,pts:[[0,mEx(T,H,1)],[500,mEx(T,H,1)]]}],xlabel:tr('frames (most recent 500)','프레임 (최근 500개)'),ylabel:'m'});
 }
 function epsEx(T,H){ const h=1e-4, b=1/T; const lnl=bb=>{ const t=1/bb; return Math.log(lam(t,H,1)[0]); }; return -(lnl(b+h)-lnl(b-h))/(2*h); }
 
@@ -501,12 +520,12 @@ function drawMat(){
   const fmt=v=>v>=1e4||v<1e-3?v.toExponential(3):v.toFixed(4);
   $('matT').innerHTML=`<span class="h">T</span><span class="h">s′ = +1</span><span class="h">s′ = −1</span><span class="h">s = +1</span><span>${fmt(tpp)}</span><span>${fmt(tpm)}</span><span class="h">s = −1</span><span>${fmt(tpm)}</span><span>${fmt(tmm)}</span>`;
   $('matL').innerHTML=`<span class="h">λ<sub>+</sub></span><span>${fmt(lp)}</span><span class="h">λ<sub>−</sub></span><span>${fmt(lm)}</span><span class="h">λ<sub>−</sub>/λ<sub>+</sub></span><span>${(()=>{ const q=lm/lp; return q!==0&&Math.abs(q)<1e-3 ? q.toExponential(3) : q.toFixed(5); })()}</span><span class="h">f = −T ln λ<sub>+</sub></span><span>${(-T*Math.log(lp)).toFixed(5)}</span>`;
-  $('matNote').innerHTML = J===0 ? 'With J = 0: λ<sub>+</sub> = 2 cosh βH and λ<sub>−</sub> = 0, so Z = (2 cosh βH)<sup>N</sup>, the non-interacting result.' : (H===0 ? `At H = 0: λ<sub>±</sub> = e<sup>βJ</sup> ± e<sup>−βJ</sup>, that is 2 cosh βJ = ${fmt(2*Math.cosh(b*J))} and 2 sinh βJ = ${fmt(2*Math.sinh(b*J))}, so Z = (2 cosh βJ)<sup>N</sup>(1 + tanh<sup>N</sup> βJ).` : '');
+  $('matNote').innerHTML = J===0 ? tr('With J = 0: λ<sub>+</sub> = 2 cosh βH and λ<sub>−</sub> = 0, so Z = (2 cosh βH)<sup>N</sup>, the non-interacting result.','J = 0이면 λ<sub>+</sub> = 2 cosh βH, λ<sub>−</sub> = 0이므로 Z = (2 cosh βH)<sup>N</sup>으로, 상호작용 없는 결과입니다.') : (H===0 ? tr(`At H = 0: λ<sub>±</sub> = e<sup>βJ</sup> ± e<sup>−βJ</sup>, that is 2 cosh βJ = ${fmt(2*Math.cosh(b*J))} and 2 sinh βJ = ${fmt(2*Math.sinh(b*J))}, so Z = (2 cosh βJ)<sup>N</sup>(1 + tanh<sup>N</sup> βJ).`,`H = 0이면 λ<sub>±</sub> = e<sup>βJ</sup> ± e<sup>−βJ</sup>, 즉 2 cosh βJ = ${fmt(2*Math.cosh(b*J))}, 2 sinh βJ = ${fmt(2*Math.sinh(b*J))}이므로 Z = (2 cosh βJ)<sup>N</sup>(1 + tanh<sup>N</sup> βJ)입니다.`) : '');
   const Ns=Array.from({length:60},(_,i)=>i+2);
   const fN=Ns.map(N=>[N,-T*(N*Math.log(lp)+Math.log1p(Math.pow(lm/lp,N)))/N]);
   plot($('fN'),{x:[0,62],series:[{color:C.accent,width:2,pts:fN},{dots:true,r:2.5,color:C.accent,pts:fN},{color:C.ink,dash:[6,4],width:1.2,pts:[[0,-T*Math.log(lp)],[62,-T*Math.log(lp)]]}],xlabel:'N',ylabel:'f_N'});
   if (!same){ const rows=[2,3,4,6,8,12,16].map(N=>{ let Z=0; for (const [B,M,cnt] of enumAgg(N)) Z+=cnt*Math.exp(b*(J*B+H*M)); const Zt=Math.pow(lp,N)+Math.pow(lm,N); return `<tr><td class="num">${N}</td><td class="num">${(1<<N).toLocaleString('en-US')}</td><td class="num">${Z.toPrecision(8)}</td><td class="num">${Zt.toPrecision(8)}</td><td class="num">${(-T*Math.log(Z)/N).toFixed(6)}</td></tr>`; });
-  $('zTable').innerHTML='<thead><tr><th style="text-align:right">N</th><th style="text-align:right">microstates</th><th style="text-align:right">Z by summing every microstate</th><th style="text-align:right">Z = λ<span class="ss"><sup>N</sup><sub>+</sub></span> + λ<span class="ss"><sup>N</sup><sub>−</sub></span></th><th style="text-align:right">f<sub>N</sub></th></tr></thead><tbody>'+rows.join('')+'</tbody>'; }   // the table depends only on (T, H, J): a resize just redraws the plots
+  $('zTable').innerHTML='<thead><tr><th style="text-align:right">N</th><th style="text-align:right">'+tr('microstates','미시상태 수')+'</th><th style="text-align:right">'+tr('Z by summing every microstate','모든 미시상태를 더한 Z')+'</th><th style="text-align:right">Z = λ<span class="ss"><sup>N</sup><sub>+</sub></span> + λ<span class="ss"><sup>N</sup><sub>−</sub></span></th><th style="text-align:right">f<sub>N</sub></th></tr></thead><tbody>'+rows.join('')+'</tbody>'; }   // the table depends only on (T, H, J): a resize just redraws the plots
   drawThermo();
 }
 
@@ -520,8 +539,8 @@ function drawThermo(){
   const TG=Array.from({length:300},(_,i)=>0.08+i*(4-0.08)/299);
   plot($('t4'),{x:[0,4],logy:true,y:[0.1,1e8],series:[{color:C.accent,width:2,pts:TG.map(T=>[T,chiEx(T,0,J)])},{color:C.ink,dash:[6,4],width:1.2,pts:TG.map(T=>[T,1/T])}],xlabel:'T',ylabel:'χ(T, 0)'});
   const TG2=Array.from({length:300},(_,i)=>0.02+i*(5-0.02)/299);
-  plot($('t5'),{x:[0,5],series:[{color:C.accent,width:2,pts:TG2.map(T=>[T,-J*Math.tanh(J/T)])},{color:C.crit,width:2,pts:TG2.map(T=>[T,(J/T)**2*sech(J/T)**2])}],xlabel:'T',ylabel:'ε (blue), c (red)'});
-  plot($('t6'),{x:[0,4],logy:true,y:[0.01,1e8],series:[{color:C.accent,width:2,pts:TG.map(T=>[T,Math.exp(2*J/T)])},{color:C.ink,dash:[6,4],width:1.2,pts:[[0,1],[4,1]]},{color:C.crit,width:2,pts:TG.map(T=>[T,J*J*sech(J/T)**2])}],xlabel:'T',ylabel:'variance per spin'});
+  plot($('t5'),{x:[0,5],series:[{color:C.accent,width:2,pts:TG2.map(T=>[T,-J*Math.tanh(J/T)])},{color:C.crit,width:2,pts:TG2.map(T=>[T,(J/T)**2*sech(J/T)**2])}],xlabel:'T',ylabel:tr('ε (blue), c (red)','ε (파랑), c (빨강)')});
+  plot($('t6'),{x:[0,4],logy:true,y:[0.01,1e8],series:[{color:C.accent,width:2,pts:TG.map(T=>[T,Math.exp(2*J/T)])},{color:C.ink,dash:[6,4],width:1.2,pts:[[0,1],[4,1]]},{color:C.crit,width:2,pts:TG.map(T=>[T,J*J*sech(J/T)**2])}],xlabel:'T',ylabel:tr('variance per spin','스핀당 분산')});
 }
 
 /* ---------- correlation ---------- */
@@ -529,12 +548,12 @@ function drawCorr(){
   const TG=Array.from({length:300},(_,i)=>0.12+i*(3-0.12)/299);
   plot($('c1'),{x:[0,3],logy:true,y:[0.1,1e7],series:[{color:C.accent,width:2,pts:TG.map(T=>[T,xiEx(T,1)])},{color:C.ink,dash:[6,4],width:1.2,pts:TG.map(T=>[T,0.5*Math.exp(2/T)])}],xlabel:'T',ylabel:'ξ(T, 0)'});
   const cols=[C.accent,C.l64,C.l16];
-  plot($('c2'),{x:[0,40],logy:true,y:[1e-6,1.2],series:[0.5,1,2].map((T,k)=>({color:cols[k],width:1.8,pts:Array.from({length:41},(_,r)=>[r,Math.pow(Math.tanh(1/T),r)])})),xlabel:'distance r',ylabel:'g(r)'});
-  $('sumTable').innerHTML='<thead><tr><th style="text-align:right">T</th><th style="text-align:right">ξ</th><th style="text-align:right">Σ<sub>r</sub> g(r), summed numerically</th><th style="text-align:right">(1 + tanh βJ)/(1 − tanh βJ)</th><th style="text-align:right">k<sub>B</sub>Tχ(T, 0) = e<sup>2βJ</sup></th></tr></thead><tbody>'+
+  plot($('c2'),{x:[0,40],logy:true,y:[1e-6,1.2],series:[0.5,1,2].map((T,k)=>({color:cols[k],width:1.8,pts:Array.from({length:41},(_,r)=>[r,Math.pow(Math.tanh(1/T),r)])})),xlabel:tr('distance r','거리 r'),ylabel:'g(r)'});
+  $('sumTable').innerHTML='<thead><tr><th style="text-align:right">T</th><th style="text-align:right">ξ</th><th style="text-align:right">'+tr('Σ<sub>r</sub> g(r), summed numerically','Σ<sub>r</sub> g(r), 수치 합')+'</th><th style="text-align:right">(1 + tanh βJ)/(1 − tanh βJ)</th><th style="text-align:right">k<sub>B</sub>Tχ(T, 0) = e<sup>2βJ</sup></th></tr></thead><tbody>'+
     [0.5,0.8,1,1.5,2,3].map(T=>{ const t=Math.tanh(1/T); let s=1, p=1; for (let r=1;r<200000;r++){ p*=t; s+=2*p; if (p<1e-16) break; } return `<tr><td class="num">${T}</td><td class="num">${xiEx(T,1).toFixed(3)}</td><td class="num">${s.toFixed(6)}</td><td class="num">${((1+t)/(1-t)).toFixed(6)}</td><td class="num">${(T*chiEx(T,0,1)).toFixed(6)}</td></tr>`; }).join('')+'</tbody>';
   const xs=Array.from({length:200},(_,i)=>i/200*0.99);
   const marks=[3,2,1,0.7,0.5].map(T=>{ const t=Math.tanh(1/T); return [t,(1+t)/(1-t)]; });
-  plot($('p1'),{x:[0,1],logy:true,y:[1,200],series:[{color:C.accent,width:2,pts:xs.map(x=>[x,(1+x)/(1-x)])},{dots:true,r:5,color:C.crit,pts:marks}],vlines:[{x:1,color:C.crit,dash:[4,4]}],xlabel:'p (percolation) or tanh βJ (Ising)',ylabel:'χ or k_BTχ'});
+  plot($('p1'),{x:[0,1],logy:true,y:[1,200],series:[{color:C.accent,width:2,pts:xs.map(x=>[x,(1+x)/(1-x)])},{dots:true,r:5,color:C.crit,pts:marks}],vlines:[{x:1,color:C.crit,dash:[4,4]}],xlabel:tr('p (percolation) or tanh βJ (Ising)','p (퍼콜레이션) 또는 tanh βJ (이징)'),ylabel:'χ or k_BTχ'});
 }
 
 /* ---------- domain walls ---------- */
@@ -543,8 +562,8 @@ function drawWalls(){
   const Ns=Array.from({length:200},(_,i)=>Math.pow(10,0.3+i*7/199));
   const d=Ns.map(N=>[N,4-T*Math.log(N*(N-1)/2)]);   // N(N − 1) two-wall states against the 2 aligned ones
   const Nst=Math.exp(2/T);
-  plot($('wC'),{logx:true,x:[2,1e7],series:[{color:C.accent,width:2,pts:d},{color:C.muted,width:1,pts:[[2,0],[1e7,0]]}],vlines:Nst<1e7?[{x:Nst,color:C.crit,dash:[4,4],label:'N*'}]:[],xlabel:'chain length N',ylabel:'ΔF / J'});
-  $('wRead').innerHTML=`<dt>2J/k<sub>B</sub>T</dt><dd>${(2/T).toFixed(3)}</dd><dt>Largest stable domain N* = e<sup>2J/k<sub>B</sub>T</sup> (large-N estimate)</dt><dd>${Nst<1e9?Nst.toFixed(1):Nst.toExponential(2)}</dd><dt>Exact zero of ΔF, N(N − 1)/2 = e<sup>4J/k<sub>B</sub>T</sup></dt><dd>${(()=>{ const Nx=(1+Math.sqrt(1+8*Math.exp(4/T)))/2; return Nx<1e9?Nx.toFixed(1):Nx.toExponential(2); })()}</dd><dt>Correlation length ξ</dt><dd>${xiEx(T,1).toFixed(2)}</dd><dt>Low-T estimate ½e<sup>2βJ</sup></dt><dd>${(0.5*Nst).toFixed(2)}</dd>`;
+  plot($('wC'),{logx:true,x:[2,1e7],series:[{color:C.accent,width:2,pts:d},{color:C.muted,width:1,pts:[[2,0],[1e7,0]]}],vlines:Nst<1e7?[{x:Nst,color:C.crit,dash:[4,4],label:'N*'}]:[],xlabel:tr('chain length N','사슬 길이 N'),ylabel:'ΔF / J'});
+  $('wRead').innerHTML=`<dt>2J/k<sub>B</sub>T</dt><dd>${(2/T).toFixed(3)}</dd><dt>${tr('Largest stable domain N* = e<sup>2J/k<sub>B</sub>T</sup> (large-N estimate)','안정한 가장 큰 자구 N* = e<sup>2J/k<sub>B</sub>T</sup> (큰 N 어림)')}</dt><dd>${Nst<1e9?Nst.toFixed(1):Nst.toExponential(2)}</dd><dt>${tr('Exact zero of ΔF, N(N − 1)/2 = e<sup>4J/k<sub>B</sub>T</sup>','ΔF의 정확한 영점, N(N − 1)/2 = e<sup>4J/k<sub>B</sub>T</sup>')}</dt><dd>${(()=>{ const Nx=(1+Math.sqrt(1+8*Math.exp(4/T)))/2; return Nx<1e9?Nx.toFixed(1):Nx.toExponential(2); })()}</dd><dt>${tr('Correlation length ξ','상관 길이 ξ')}</dt><dd>${xiEx(T,1).toFixed(2)}</dd><dt>${tr('Low-T estimate ½e<sup>2βJ</sup>','저온 어림 ½e<sup>2βJ</sup>')}</dt><dd>${(0.5*Nst).toFixed(2)}</dd>`;
 }
 function drawChains(){
   const n=22, a=[], b=[];
@@ -571,6 +590,7 @@ $('wT').addEventListener('input',drawWalls);
 let rz=0;
 const ro=new ResizeObserver(()=>{ if (rz) return; rz=requestAnimationFrame(()=>{ rz=0; if (S){ drawChain(); drawLive(); } drawMat(); drawCorr(); drawWalls(); }); });
 document.querySelectorAll('figure, .plate').forEach(el=>ro.observe(el));
+window.addEventListener('langchange',()=>{ $('runB').textContent=LV.running?tr('Pause','일시 정지'):tr('Run','실행'); matKey=''; if (S){ stats(); drawChain(); drawLive(); } drawMat(); drawCorr(); drawWalls(); });
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{ readColors(); if (S){ drawChain(); drawLive(); } drawMat(); drawCorr(); drawWalls(); });
 
 readColors(); reset('random'); setT(0.8); drawChains(); drawMat(); drawCorr(); drawWalls();
@@ -578,5 +598,118 @@ drawChain(); drawLive();
 if (RM.matches) setRun(false); else kick();
 })();
 </script>
+<!-- lang-toggle:body -->
+<script>
+window.I18N_KO={
+"__title": "1차원 이징(Ising) 모형",
+"k1": "1차원 이징(Ising) 모형",
+"k2": "이징(Ising) 자신이 그랬듯이 스핀을 사슬 위에 놓습니다. 이 모형은 2 × 2 전달 행렬로 정확히 풀 수 있고, 그 답은 유한한 온도에서는 상전이가 없다는 것입니다: 임계점은 T<sub>c<\/sub> = 0, H<sub>c<\/sub> = 0에 있으며, 여기서 자유 에너지에 뾰족점이 생기고 감수율과 상관 길이가 발산합니다. 사슬이 요동하는 모습을 본 뒤, 정확한 풀이를 한 단계씩 따라가 보세요.",
+"k3": "이상훈 교수의 2장 강의 노트를 바탕으로 하며, K. Christensen and N. R. Moloney, <i>Complexity and Criticality<\/i> (2005)를 따릅니다. 단위: k<sub>B<\/sub> = 1이고, 따로 밝히지 않으면 J = 1입니다. <a href=\"#references\" style=\"color:var(--accent)\">참고문헌<\/a>",
+"k4": "위: 지금의 사슬(흰색은 위, 검은색은 아래). 아래: 그 역사로, 한 프레임에 한 줄씩 시간이 아래로 흐르므로 자구는 세로 줄무늬로, 자구벽은 그 경계로 나타납니다. 주기 경계 조건 s<sub>N+1<\/sub> = s<sub>1<\/sub>.",
+"k5": "외부 자기장 H",
+"k6": "사슬 길이 N",
+"k7": "속도",
+"k8": "프레임당 1 스윕",
+"k9": "프레임당 4 스윕",
+"k10": "프레임당 16 스윕",
+"k11": "무작위 시작",
+"k12": "모두 위로",
+"k13": "스핀당 자화 m (현재)",
+"k14": "m의 시간 평균 / 정확한 m(T, H)",
+"k15": "ε의 시간 평균 / 정확한 ε(T, H)",
+"k16": "자구벽 개수 (현재)",
+"k17": "평균 자구 길이 / 정확한 값 2/(1 − tanh βJ)",
+"k18": "상관 길이 ξ = 1/ln(λ<sub>+<\/sub>/λ<sub>−<\/sub>)",
+"k19": "<b>사슬의 스핀–스핀 상관 g(r)<\/b>점: 실행 동안 평균한 ⟨s<sub>i<\/sub>s<sub>i+r<\/sub>⟩ − ⟨m⟩². 선: 정확한 sin²2φ (λ<sub>−<\/sub>/λ<sub>+<\/sub>)<sup>r<\/sup>로, H = 0에서는 tanh<sup>r<\/sup>(βJ) = e<sup>−r/ξ<\/sup>입니다.",
+"k20": "<b>H = 0에서의 자구 길이<\/b>점: 사슬에서 관찰된 자구. 선: 정확한 기하 분포로, 각 결합이 확률 (1 + tanh βJ)/2로 서로 독립적으로 평행하기 때문입니다.",
+"k21": "<b>시간에 따른 자화<\/b>T &gt; 0이면 어디서도 자화가 오래 유지되지 않습니다: 사슬이 자구로 쪼개지고, 자구들은 떠돌다가 합쳐집니다.",
+"k22": "전달 행렬",
+"k23": "주기 경계 조건에서 E = −J Σ<sub>i<\/sub> s<sub>i<\/sub>s<sub>i+1<\/sub> − H Σ<sub>i<\/sub> s<sub>i<\/sub>이고, 자기장 항은 이웃끼리 똑같이 나눌 수 있습니다: H s<sub>i<\/sub> → (H/2)(s<sub>i<\/sub> + s<sub>i+1<\/sub>). 그러면 볼츠만 가중치가 결합마다 하나씩의 인자 T<sub>s<sub>i<\/sub>s<sub>i+1<\/sub><\/sub> = exp[βJ s<sub>i<\/sub>s<sub>i+1<\/sub> + (βH/2)(s<sub>i<\/sub> + s<sub>i+1<\/sub>)]로 인수분해되며, 이는 실수 대칭 2 × 2 행렬의 성분입니다. 각 스핀에 대한 합은 행렬 곱이므로",
+"k25": "온도 T",
+"k26": "자기장 H",
+"k27": "결합 상수 J",
+"k28": "<b>유한한 고리의 스핀당 자유 에너지<\/b>N에 대한 f<sub>N<\/sub> = −T ln(λ<span class=\"ss\"><sup>N<\/sup><sub>+<\/sub><\/span> + λ<span class=\"ss\"><sup>N<\/sup><sub>−<\/sub><\/span>)/N. (λ<sub>−<\/sub>/λ<sub>+<\/sub>)<sup>N<\/sup> → 0이 되면서 f = −T ln λ<sub>+<\/sub> (점선)에 다가갑니다.",
+"k29": "자유 에너지, 자화, 응답",
+"k30": "열역학적 극한에서는 큰 고윳값만 살아남으므로",
+"k32": "H = 0에서 f = −T ln(2 cosh βJ)이며, T → ∞이면 −T ln 2(무작위 스핀의 순수한 엔트로피)로, T → 0이면 −J(정렬된 스핀의 순수한 에너지)로 갑니다. T &gt; 0이면 H → 0일 때 m → 0이므로 m<sub>0<\/sub>(T) = 0이고, T = 0에서만 m<sub>0<\/sub> = ±1입니다. 자유 에너지는 (T, H) = (0, 0)에서 뾰족점, 즉 특이점을 갖는데, 이것이 임계점입니다. J = 0으로 두면 상호작용이 없는 결과 m = tanh βH와 χ = β sech² βH가 다시 나옵니다.",
+"k33": "<b>H에 대한 f(T, H)<\/b>선택한 J에서 T = 0 (파랑), 1, 2, 3. T = 0에서는 −J − |H|이고 H = 0에 뾰족점이 있습니다.",
+"k34": "<b>H에 대한 m(T, H)<\/b>T = 0 (파랑, −1에서 +1로 뜀), 0.5, 1, 2. 점선: T = 1에서 상호작용 없는 스핀.",
+"k35": "<b>H에 대한 χ(T, H)<\/b>T = 0.5, 1, 2에서 χ = β cosh βH e<sup>−4βJ<\/sup> / (sinh² βH + e<sup>−4βJ<\/sup>)<sup>3/2<\/sup>.",
+"k36": "<b>영 자기장 감수율 χ(T, 0)<\/b>로그 눈금. χ(T, 0) = β e<sup>2βJ<\/sup> (파랑)는 T → 0에서 지수적으로 발산합니다. 상호작용 없는 스핀에서는 1/T (점선)일 뿐입니다.",
+"k37": "<b>H = 0에서의 에너지와 비열<\/b>ε = −J tanh βJ (파랑)와 c = (J/T)² sech² βJ (빨강). χ와 달리 c는 발산하지 않고 βJ ≈ 1 근처에서 최대가 됩니다.",
+"k38": "<b>H = 0에서의 요동<\/b>(⟨M²⟩ − ⟨M⟩²)/N = k<sub>B<\/sub>Tχ = e<sup>2βJ<\/sup>는 T가 내려가면 커지지만 (파랑), 상호작용 없는 스핀에서는 1에 머뭅니다 (점선). 에너지 분산 T²c (빨강)는 유계로 남습니다.",
+"k39": "상관 함수와 합 규칙",
+"k40": "H = 0에서 T &gt; 0이면 m<sub>0<\/sub> = 0이므로 g(r) = ⟨s<sub>i<\/sub>s<sub>i+r<\/sub>⟩입니다. 결합 상수를 J<sub>i<\/sub>로 쓰고 Z = 2<sup>N<\/sup> Π cosh βJ<sub>i<\/sub>를 두 스핀 사이의 각 결합에 대해 한 번씩 미분하면",
+"k42": "ξ는 T → ∞에서 0으로 가고 T → 0<sup>+<\/sup>에서 ½e<sup>2βJ<\/sup>처럼 커집니다. 정확히 T = 0에서는 모든 스핀이 정렬되어 g = 0입니다. g를 모든 자리에 대해 더하면 감수율이 나옵니다: Σ<sub>j<\/sub> g = (1 + tanh βJ)/(1 − tanh βJ) = e<sup>2βJ<\/sup> = k<sub>B<\/sub>Tχ(T, 0).",
+"k43": "<b>상관 길이 ξ(T, 0)<\/b>로그 눈금. 파랑: −1/ln tanh(1/T). 점선: 그 저온 극한인 ½e<sup>2/T<\/sup>.",
+"k44": "<b>g(r) = tanh<sup>r<\/sup> βJ<\/b>로그 눈금, T = 0.5, 1, 2: 기울기가 −1/ξ인 직선입니다.",
+"k45": "임계점과 퍼콜레이션",
+"k46": "영 자기장에서는 T = 0이 임계점 역할을 합니다: 가까이 갈수록 χ와 ξ가 발산하고, 자발 자화가 나타나기 시작합니다. 따라서 (T<sub>c<\/sub>, H<sub>c<\/sub>) = (0, 0)입니다. p<sub>c<\/sub> = 1이고 p ≤ 1인 1차원 퍼콜레이션처럼, 임계점에는 한쪽에서만 다가갈 수 있습니다. 이 유비는 정확합니다: p ↔ tanh βJ로 대응시키면 상관 함수와 감수율이 같은 꼴입니다. 유일한 차이는 기준 상태입니다. 퍼콜레이션에서 ξ는 빈 격자로부터의 요동을, 이징 모형에서는 무작위 방향 스핀으로부터의 요동을 잽니다.",
+"k47": "1차원 퍼콜레이션",
+"k48": "1차원 이징 모형, H = 0",
+"k49": "<b>조절 변수<\/b>",
+"k50": "T와 H",
+"k51": "<b>임계점<\/b>",
+"k52": "p<sub>c<\/sub> = 1, 아래에서 접근",
+"k53": "(T<sub>c<\/sub>, H<sub>c<\/sub>) = (0, 0), 위에서 접근",
+"k54": "<b>상관 함수<\/b>",
+"k56": "<b>상관 길이<\/b>",
+"k59": "<b>합 규칙<\/b>",
+"k61": "<b>ξ가 재는 요동의 기준<\/b>",
+"k62": "빈 배치",
+"k63": "무작위 방향 배치",
+"k64": "<b>두 모형에 공통인 한 곡선<\/b>x에 대한 (1 + x)/(1 − x)로, x는 퍼콜레이션에서는 p, 이징 모형에서는 tanh βJ입니다. 점은 T = 3, 2, 1, 0.7, 0.5에서의 이징 값을 표시합니다. T → 0은 p → 1에 대응하고, 점선은 p<sub>c<\/sub> = 1, 즉 T<sub>c<\/sub> = 0을 표시합니다.",
+"k65": "왜 자구벽이 이기는가",
+"k66": "무한히 큰 정렬된 덩어리가 T<sub>c<\/sub> = 0에서만 살아남는 열역학적 이유도 있습니다. 정렬된 스핀의 단일 자구를, 각각 2J의 비용이 드는 두 자구벽으로 둘러싸인 뒤집힌 스핀의 “물방울”을 가진 같은 사슬과 비교해 봅시다:",
+"k68": "N개의 결합으로 된 고리에서 두 벽은 N(N − 1)/2쌍의 결합에 놓일 수 있고, 각 선택마다 전체 스핀 뒤집기가 함께 있으므로 그런 상태는 N(N − 1)개입니다(N = 4이면 열두 개). 이것이 엔트로피입니다. 따라서 F<sub>2-dom<\/sub> − F<sub>1-dom<\/sub> = 4J − k<sub>B<\/sub>T ln[N(N − 1)/2] ≈ 4J − 2k<sub>B<\/sub>T ln N (큰 N)이고, 2J/k<sub>B<\/sub>T &lt; ln N이면 언제나 단일 자구가 불안정한데, N → ∞이면 이는 모든 T &gt; 0에 해당합니다. 큰 N 꼴을 0으로 두면 가장 큰 자구를 N ≈ e<sup>2J/k<sub>B<\/sub>T<\/sup>로 어림할 수 있고(정확한 식은 N(N − 1)/2 = e<sup>4J/k<sub>B<\/sub>T<\/sup>, 즉 N ≈ <span class=\"rad\"><span class=\"rs\">√<\/span><span class=\"rc\">2<\/span><\/span> e<sup>2J/k<sub>B<\/sub>T<\/sup>에서 0을 지나지만 지수적 크기만 중요합니다), 이는 ξ ≈ ½e<sup>2βJ<\/sup>와 들어맞습니다. 1차원에서는 유한한 온도에서 상전이가 일어나지 않습니다.",
+"k69": "온도 T",
+"k70": "<b>N에 대한 F<sub>2-dom<\/sub> − F<sub>1-dom<\/sub><\/b>N은 로그 눈금. 4J − k<sub>B<\/sub>T ln[N(N − 1)/2]. 큰 N 어림값 N* ≈ e<sup>2J/T<\/sup> (점선) 근처에서 음수가 되며, 정확한 0은 N(N − 1)/2 = e<sup>4J/T<\/sup>에 있습니다. 더 긴 사슬은 언제나 쪼개집니다.",
+"k71": "이는 대칭 깨짐과 이어집니다: 유한한 사슬에서는 H → 0을 먼저 취하면 ⟨M⟩ = 0이고, 1차원에서는 N → ∞을 먼저 취해도 T &gt; 0이면 소용이 없습니다. 자구벽이 ξ보다 큰 규모에서 질서를 무너뜨리기 때문입니다. 맨 위의 실시간 사슬이 바로 이것을 보여 줍니다.",
+"k72": "참고문헌",
+"k73": "<b>핵심 참고문헌.<\/b> K. Christensen and N. R. Moloney, <i>Complexity and Criticality<\/i>, Imperial College Press, London (2005), Chapter 2.",
+"k75": "H. A. Kramers and G. H. Wannier, “Statistics of the two-dimensional ferromagnet. Part I,” <i>Phys. Rev.<\/i> <b>60<\/b>, 252 (1941). 전달 행렬 방법.",
+"k78": "실시간 사슬은 고리 위에서 메트로폴리스 갱신을 씁니다. 나머지 곡선은 모두 정확한 결과입니다.",
+"k79": "이상훈 교수의 강의 노트를 바탕으로 Claude Opus 5.5가 만들었습니다.",
+"k24": "Z = Σ<sub>s<sub>1<\/sub><\/sub> (T<sup>N<\/sup>)<sub>s<sub>1<\/sub>s<sub>1<\/sub><\/sub> = Tr T<sup>N<\/sup> = λ<span class=\"ss\"><sup>N<\/sup><sub>+<\/sub><\/span> + λ<span class=\"ss\"><sup>N<\/sup><sub>−<\/sub><\/span>,  λ<sub>±<\/sub> = e<sup>βJ<\/sup> [cosh βH ± <span class=\"rad\"><span class=\"rs\">√<\/span><span class=\"rc\">sinh² βH + e<sup>−4βJ<\/sup><\/span><\/span>]",
+"k31": "f(T, H) = −J − T ln[cosh βH + <span class=\"rad\"><span class=\"rs\">√<\/span><span class=\"rc\">sinh² βH + e<sup>−4βJ<\/sup><\/span><\/span>],  m(T, H) = sinh βH / <span class=\"rad\"><span class=\"rs\">√<\/span><span class=\"rc\">sinh² βH + e<sup>−4βJ<\/sup><\/span><\/span>",
+"k41": "g(r) = tanh<sup>r<\/sup> βJ = e<sup>−r/ξ<\/sup>,  ξ = −1/ln tanh βJ = 1/ln(λ<sub>+<\/sub>/λ<sub>−<\/sub>)",
+"k55": "g(r) = (tanh βJ)<sup>r<\/sup>",
+"k57": "ξ = −1/ln p",
+"k58": "ξ = −1/ln tanh βJ",
+"k60": "k<sub>B<\/sub>Tχ = (1 + tanh βJ)/(1 − tanh βJ) = e<sup>2βJ<\/sup>",
+"k67": "F<sub>1-dom<\/sub> = −NJ − k<sub>B<\/sub>T ln 2,  F<sub>2-dom<\/sub> = −NJ + 4J − k<sub>B<\/sub>T ln[N(N − 1)]",
+"k74": "E. Ising, “Beitrag zur Theorie des Ferromagnetismus,” <i>Z. Phys.<\/i> <b>31<\/b>, 253 (1925).",
+"k76": "S. G. Brush, “History of the Lenz–Ising model,” <i>Rev. Mod. Phys.<\/i> <b>39<\/b>, 883 (1967).",
+"k77": "N. Goldenfeld, <i>Lectures on Phase Transitions and the Renormalization Group<\/i>, Addison-Wesley (1992)."
+};
+(function(){
+  // English / 한국어 switch shared by the course demos; the choice is remembered across pages
+  var KEY='lshlj82-demo-lang', root=document.documentElement, KO=window.I18N_KO||{}, EN={};
+  var els=[].slice.call(document.querySelectorAll('[data-k]'));
+  els.forEach(function(e){EN[e.getAttribute('data-k')]=e.innerHTML;});
+  var titleEN=document.title;
+  var btn=document.createElement('button');btn.id='langBtn';btn.type='button';document.body.appendChild(btn);
+  function typeset(list){
+    if(!list.length)return;
+    if(window.MathJax&&MathJax.typesetPromise){var go=function(){MathJax.typesetPromise(list).catch(function(){});};
+      if(MathJax.startup&&MathJax.startup.promise)MathJax.startup.promise.then(go);else go();}
+    if(window.renderMathInElement&&window.KATEX_OPTS)list.forEach(function(e){try{renderMathInElement(e,window.KATEX_OPTS)}catch(_){}}); 
+  }
+  function apply(l,first){
+    window.LANG=l;root.dataset.lang=l;root.lang=l;var changed=[];
+    els.forEach(function(e){var k=e.getAttribute('data-k'),s=(l==='ko'&&KO[k]!=null)?KO[k]:EN[k];if(e.innerHTML!==s){e.innerHTML=s;changed.push(e);}});
+    document.title=(l==='ko'&&KO.__title)?KO.__title:titleEN;
+    btn.textContent=l==='ko'?'EN':'한국어';btn.setAttribute('aria-label',l==='ko'?'View in English':'한국어로 보기');btn.title=btn.getAttribute('aria-label');
+    btn.setAttribute('lang',l==='ko'?'en':'ko');
+    if(!first)typeset(changed);
+    window.dispatchEvent(new CustomEvent('langchange',{detail:{lang:l}}));
+    // canvases drawn before the Korean web font arrives are redrawn once it has loaded
+    if(l==='ko'&&document.fonts&&!document.fonts.check('16px "IBM Plex Sans KR"','가'))document.fonts.load('16px "IBM Plex Sans KR"','가').then(function(){if(window.LANG==='ko')window.dispatchEvent(new CustomEvent('langchange',{detail:{lang:'ko'}}));}).catch(function(){});
+  }
+  btn.addEventListener('click',function(){var n=window.LANG==='ko'?'en':'ko';try{localStorage.setItem(KEY,n)}catch(e){}apply(n,false);});
+  apply(window.LANG||'en',true);
+})();
+</script>
+<!-- lang-toggle:body-end -->
 </body>
 </html>
